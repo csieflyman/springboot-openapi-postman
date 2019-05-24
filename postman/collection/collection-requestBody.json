@@ -1,0 +1,12 @@
+{
+  "users": {
+    "create User": {
+      "mode": "raw",
+      "raw": {"age": "{{age}}", "gender": "{{gender}}", "name": "{{name}}"}
+    },
+    "update User": {
+      "mode": "raw",
+      "raw": {"age": "{{age}}", "gender": "{{gender}}", "name": "{{name}}"}
+    }
+  }
+}

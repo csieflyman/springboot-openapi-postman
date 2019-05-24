@@ -1,0 +1,15 @@
+{
+  "environment": {
+    "id": "84a119b6-f4b1-9120-5f11-a73b17818d70",
+    "name": "localhost",
+    "values": [
+      {
+        "key": "baseUrl",
+        "value": "http://localhost:8080",
+        "type": "text",
+        "enabled": true,
+        "hovered": false
+      }
+    ]
+  }
+}

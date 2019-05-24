@@ -1,0 +1,89 @@
+---
+swagger: "2.0"
+info:
+  description: "This is User API"
+  version: "1.0"
+  title: "User API"
+host: "localhost:8080"
+basePath: "/"
+tags: []
+schemes:
+- "http"
+paths:
+  /users:
+    post:
+      operationId: "createUser"
+      consumes:
+      - "application/json;charset=UTF-8"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+  /users/{userId}:
+    get:
+      operationId: "getUser"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "User Model"
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: "User not found"
+    put:
+      operationId: "updateUser"
+      consumes:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+    delete:
+      operationId: "deleteUser"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+definitions:
+  User:
+    type: "object"
+    required:
+    - "age"
+    - "gender"
+    - "name"
+    properties:
+      name:
+        type: "string"
+      gender:
+        type: "string"
+      age:
+        type: "integer"
+        format: "int32"

@@ -1,0 +1,20 @@
+{
+  "name": "postman",
+  "version": "1.0.0",
+  "description": "OpenAPI 3.0 to Postman Collection v2.1.0 Converter",
+  "main": "toPostman.js",
+  "scripts": {
+    "toPostman": "toPostman.js"
+  },
+  "author": "James",
+  "license": "ISC",
+  "devDependencies": {
+    "http": "0.0.0",
+    "newman": "^4.5.0",
+    "newman-reporter-html": "^1.0.3",
+    "openapi-to-postmanv2": "0.0.12",
+    "postman-collection": "^3.4.8",
+    "querystring": "^0.2.0",
+    "request": "^2.88.0"
+  }
+}
