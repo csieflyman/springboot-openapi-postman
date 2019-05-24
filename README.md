@@ -10,7 +10,7 @@ Convert Spring Boot Controller to Postman Collection for End-To-End Automated Te
 1. Install Node.js packages by executing gradle task "myNpmInstall"
 2. Convert spring boot controller to postman collection by executing gradle task "generatePostmanCollection"
 3. Prepare postman test data json files (request body, environment variables...etc)
-4. Runing test by executing gradle task "newman"
+4. Runing test by executing gradle task "newman ${envName} ${collectionName} ${folderName}"
 5. Check the test report (html, json format)
 6. Upload postman collection and env to postman server by executing gradle task "uploadToPostmanServer"
 
@@ -38,6 +38,7 @@ Convert Spring Boot Controller to Postman Collection for End-To-End Automated Te
 		* https://docs.api.getpostman.com/
 
 ## Test data files
+* /postman/env/${envName}.json => environment variables config file
 * /postman/collection.json => auto-generated postman collection json file
 * /postman/collection-order.json => specify request's executing order in collection
 * /postman/collection-requestBody.json => request body template file (replace value by collection-data.json)
