@@ -1,0 +1,127 @@
+---
+swagger: "2.0"
+info:
+  description: "This is User API"
+  version: "1.0"
+  title: "User API"
+host: "localhost:8080"
+basePath: "/"
+tags: []
+schemes:
+- "http"
+paths:
+  /users:
+    get:
+      operationId: "findUsers"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          type: "object"
+          additionalProperties:
+            type: "array"
+            items:
+              type: "string"
+      responses:
+        default:
+          description: "successful operation"
+    post:
+      operationId: "createUser"
+      consumes:
+      - "application/json;charset=UTF-8"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "integer"
+            format: "int64"
+  /users/{userId}:
+    get:
+      operationId: "getUser"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "User Model"
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: "User not found"
+    put:
+      operationId: "updateUser"
+      consumes:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+    delete:
+      operationId: "deleteUser"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+definitions:
+  User:
+    type: "object"
+    required:
+    - "age"
+    - "createdAt"
+    - "gender"
+    - "id"
+    - "isMember"
+    - "name"
+    - "updatedAt"
+    properties:
+      createdAt:
+        type: "integer"
+        format: "int64"
+      updatedAt:
+        type: "integer"
+        format: "int64"
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+        minLength: 1
+        maxLength: 20
+      gender:
+        type: "string"
+        enum:
+        - "MALE"
+        - "FEMALE"
+        - "UNKNOWN"
+      age:
+        type: "integer"
+        format: "int32"
+        minimum: 1900
+      isMember:
+        type: "boolean"
