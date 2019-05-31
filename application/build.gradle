@@ -42,10 +42,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-json")
-
+    
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
     implementation group: 'com.h2database', name: 'h2', version: '1.4.199'
-
+    
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate5', version: '2.9.7'
+    implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.4.3'
+    
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.2'
