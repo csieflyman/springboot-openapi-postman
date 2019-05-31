@@ -5,6 +5,7 @@ import base.exception.InternalServerErrorException;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.Converter;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -13,7 +14,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 /**
  * @author csieflyman
@@ -47,7 +47,7 @@ public class BeanUtils {
 
     public static void copyIgnoreNullAndProps(Object source, Object target, Set<String> ignoreFields) {
         Set<String> fieldNames = new HashSet<>();
-        String[] ignoreFieldNames = Stream.of(source.getClass().getFields()).filter(field -> {
+        String[] ignoreFieldNames = FieldUtils.getAllFieldsList(source.getClass()).stream().filter(field -> {
             try {
                 if(fieldNames.contains(field.getName())) // 略過 superclass 重複名稱的欄位
                     return false;

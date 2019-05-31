@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 import javax.persistence.*;
 import javax.persistence.criteria.*;
@@ -15,7 +16,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author csieflyman
@@ -117,11 +117,11 @@ public class JPAUtils {
     }
 
     public static Set<String> getPropertyNames(Class clazz) {
-        return Stream.of(clazz.getFields()).filter(JPAUtils::isColumn).map(Field::getName).collect(Collectors.toSet());
+        return FieldUtils.getAllFieldsList(clazz).stream().filter(JPAUtils::isColumn).map(Field::getName).collect(Collectors.toSet());
     }
 
     public static String getIdPropertyName(Class clazz) {
-        return Stream.of(clazz.getFields()).filter(JPAUtils::isIdColumn).map(Field::getName).findFirst().orElseThrow(() -> new InvalidEntityException("id isn't defined"));
+        return FieldUtils.getAllFieldsList(clazz).stream().filter(JPAUtils::isIdColumn).map(Field::getName).findFirst().orElseThrow(() -> new InvalidEntityException("id isn't defined"));
     }
 
     public static <T> CriteriaQuery<Tuple> toJpaQuery(Query query, CriteriaBuilder cb, Class<T> clazz) {
@@ -290,7 +290,7 @@ public class JPAUtils {
 
     private static Map<String, String> buildColumnNameAliasMap(String relation, Class clazz, java.util.function.Predicate<Field> predicate) {
         Set<String> properties = new HashSet<>();
-        for(Field field: clazz.getFields()) {
+        for(Field field: FieldUtils.getAllFieldsList(clazz)) {
             if(predicate != null && !predicate.test(field)) {
                 continue;
             }
@@ -298,7 +298,7 @@ public class JPAUtils {
                 properties.add(field.getName());
             }
             else if(isEmbeddedIdColumn(field)) {
-                for(Field idField: field.getType().getFields()) {
+                for(Field idField: field.getType().getDeclaredFields()) {
                     if(isNotEmbeddedIdColumn(idField)) {
                         properties.add(idField.getName());
                     }
