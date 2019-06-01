@@ -132,7 +132,7 @@ function addMockRequestAtFirstPosition(collection) {
                 name: 'Mock Request',
                 request: {
                     url: {
-                        host: ['http://www.google.com']
+                        host: ['{{baseUrl}}/postman-blank-page.html']
                     },
                     method: 'GET'
                 },
