@@ -70,7 +70,7 @@ swagger {
         springmvc = true
         attachSwaggerArtifact = true
         locations = ['example.controller']
-        swaggerDirectory = "${project.rootDir}/apidoc"
+        swaggerDirectory = "${project.projectDir}/apidoc"
         schemes = ['http']
         host = 'localhost:8080'
         basePath = '/'
