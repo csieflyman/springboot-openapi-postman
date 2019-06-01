@@ -50,26 +50,25 @@ function openapi3ToPostmanCollection(){
 };
 
 function manipulateCollection(collection) {
-    flatRequestsToPath1Folder(collection);
-    sortRequestOrder(collection);
-    addEvent(collection);
+    moveAllRequestsToRootFolder(collection);
     addRequestBody(collection);
     parameterizeVariables(collection);
+    addEvent(collection);
+    addMockRequestAtFirstPosition(collection);
     console.log("manipulateCollection success");
     fs.writeFileSync('postman/collection/collection.json', JSON.stringify(collection));
 }
 
-function flatRequestsToPath1Folder(collection) {
-    collection.item.forEach(folder => {
-        if(folder.item) {
-            folder.item.forEach(function(folderItem) {
-                if(folderItem.item) {
-                    moveRequestToFolder(folder, folderItem.item);
+function moveAllRequestsToRootFolder(collection) {
+    collection.item.forEach(rootFolder => {
+        if(rootFolder.item) {
+            rootFolder.item.forEach(function(subFolder) {
+                if(subFolder.item) {
+                    moveRequestToFolder(rootFolder, subFolder.item);
                 }
             });
-            folder.item = folder.item.filter(item => item.request);
+            rootFolder.item = rootFolder.item.filter(item => item.request);
         }
-        //console.log(JSON.stringify(collection));
     });
 }
 
@@ -83,56 +82,15 @@ function moveRequestToFolder(folder, item) {
     });
 }
 
-function sortRequestOrder(collection) {
-    const filePath = 'postman/collection/collection-order.json';
-    if(fs.existsSync(filePath)) {
-        console.log("load file: " + filePath);
-        const requestOrderArray = JSON.parse(fs.readFileSync('postman/collection/collection-order.json', {encoding: 'utf8'}));
-        collection.item.forEach(item => item.item.sort(function(a, b) {
-            return requestOrderArray.indexOf(a.name) - requestOrderArray.indexOf(b.name);
-        }));
-    }
-}
-
-
-function addEvent(collection) {
-    const filePath = 'postman/collection/collection-event.json';
-    if(fs.existsSync(filePath)) {
-        console.log("load file: " + filePath);
-        let root = JSON.parse(fs.readFileSync(filePath, {encoding: 'utf8'}));
-        collection.event = root.collection;
-        collection.item.forEach(folder => {
-            let folderName = folder.name;
-            if(folder.item && root[folderName]) {
-                folder.item.forEach(function(folderItem) {
-                    let requestName = folderItem.name;
-                    if(root[folderName][requestName]) {
-                        folderItem.event = root[folderName][requestName];
-                    }
-                });
-            }
-        });
-    }
-}
-
 function addRequestBody(collection) {
-    const filePath = 'postman/collection/collection-requestBody.json';
-    if(fs.existsSync(filePath)) {
-        console.log("load file: " + filePath);
-        let root = JSON.parse(fs.readFileSync(filePath, {encoding: 'utf8'}));
-        collection.item.forEach(folder => {
-            let folderName = folder.name;
-            if(folder.item && root[folderName]) {
-                folder.item.forEach(function(folderItem) {
-                    let requestName = folderItem.name;
-                        if(root[folderName][requestName]) {
-                        folderItem.request.body = root[folderName][requestName];
-                        folderItem.request.body.raw = JSON.stringify(folderItem.request.body.raw);
-                    }
-                });
-            }
-        });
-    }
+    collection.item.forEach(folder => {
+        if(folder.item) {
+            folder.item.filter(folderItem =>
+                ['POST', 'PUT'].includes(folderItem.request.method) &&
+                folderItem.request.header.find(header => header.key === 'Content-Type' && header.value.includes('application/json')))
+                .forEach(folderItem => folderItem.request.body = {mode: "raw", raw: "{{_requestBody}}"});
+        }
+    });
 }
 
 function parameterizeVariables(collection) {
@@ -142,6 +100,53 @@ function parameterizeVariables(collection) {
                 folderItem.request.url.variable.forEach(variable => {
                     variable.value = "{{" + variable.key + "}}";
                 });
+            });
+        }
+    });
+}
+
+function addEvent(collection) {
+    collection.item.forEach(folder => {
+        if(folder.item) {
+            folder.item.forEach(function(folderItem) {
+                folderItem.event.push(
+                        {
+                            listen: "test",
+                            script: {
+                                type: "text/javascript",
+                                exec: [
+                                    "let script = pm.iterationData.get(\"_test\");eval(script);postman.setNextRequest(null);"
+                                ]
+                            }
+                        }
+                    );
+            });
+        }
+    });
+}
+
+function addMockRequestAtFirstPosition(collection) {
+    collection.item.forEach(folder => {
+        if(folder.item) {
+            folder.item.splice(0, 0, {
+                name: 'Mock Request',
+                request: {
+                    url: {
+                        host: ['http://www.google.com']
+                    },
+                    method: 'GET'
+                },
+                event: [
+                    {
+                        listen: "prerequest",
+                        script: {
+                            type: "text/javascript",
+                            exec: [
+                                "postman.setNextRequest(pm.iterationData.get(\"_requestName\"));"
+                            ]
+                        }
+                    }
+                ]
             });
         }
     });

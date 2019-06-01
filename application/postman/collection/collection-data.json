@@ -1,6 +1,28 @@
-[{
-  "name": "james",
-  "gender": "MALE",
-  "age": 30,
-  "isMember": false
-}]
+[
+  {
+    "_requestName": "create User",
+    "_requestBody": "{\"name\": \"james\",\"gender\": \"MALE\",\"age\": 30,\"isMember\": false}",
+    "_test": "postman.setEnvironmentVariable(\"userId\", responseBody);"
+  },
+  {
+    "_requestName": "get User",
+    "_test": ""
+  },
+  {
+    "_requestName": "update User",
+    "_requestBody": "{\"name\": \"haha\",\"gender\": \"MALE\",\"age\": 30,\"isMember\": false}",
+    "_test": ""
+  },
+  {
+    "_requestName": "get User",
+    "_test": ""
+  },
+  {
+    "_requestName": "find Users",
+    "_test": ""
+  },
+  {
+    "_requestName": "delete User",
+    "_test": ""
+  }
+]
