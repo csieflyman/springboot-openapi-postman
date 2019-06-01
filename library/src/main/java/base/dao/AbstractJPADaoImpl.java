@@ -67,7 +67,7 @@ public abstract class AbstractJPADaoImpl<T extends Identifiable<ID>, ID extends 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaUpdate<T> updateQuery = cb.createCriteriaUpdate(clazz);
         valueMap.forEach(updateQuery::set);
-        updateQuery.where(JPAUtils.toJPAPredicate(cb, updateQuery.getRoot(), junction));
+        updateQuery.where(JPAUtils.toJPAPredicate(cb, updateQuery.from(clazz), junction));
         return em.createQuery(updateQuery).executeUpdate();
     }
 
@@ -75,7 +75,7 @@ public abstract class AbstractJPADaoImpl<T extends Identifiable<ID>, ID extends 
     public int executeDelete(Junction junction) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaDelete<T> deleteQuery = cb.createCriteriaDelete(clazz);
-        deleteQuery.where(JPAUtils.toJPAPredicate(cb, deleteQuery.getRoot(), junction));
+        deleteQuery.where(JPAUtils.toJPAPredicate(cb, deleteQuery.from(clazz), junction));
         return em.createQuery(deleteQuery).executeUpdate();
     }
 
