@@ -1,15 +1,41 @@
+const fs = require('fs')
 const newman = require('newman');
 const util = require('./util.js').init();
 
-newman.run({
-    globals: 'postman/globals.json',
-    environment: `postman/env/${util.envName}.json`,
-    collection: util.collectionFile,
-    folder: process.argv[4] ? process.argv[4].split(",") : undefined,
-    iterationData: `postman/collection/${util.collectionName}-data.json`,
-    reporters: 'html',
-    reporter: {html: {export: 'postman/report.html'}}
-}, function (err) {
-    if (err) { throw err; }
-    console.log('collection run complete!');
+const collectionFilePath = 'postman/collection/collection.json';
+if(!fs.existsSync(collectionFilePath)) {
+    console.log('not exists collection.json file. exit...')
+    return;
+}
+
+collection = JSON.parse(fs.readFileSync(collectionFilePath, {encoding: 'utf8'}));
+const folderNameArray = collection.item.map(folder => folder.name);
+if(folderNameArray.length == 0) {
+    console.log('not exists folders. exit...')
+    return;
+}
+
+const runnerArray = folderNameArray.map(folderName => {
+    return function(callback) {
+        newman.run({
+            globals: 'postman/globals.json',
+            environment: `postman/env/${util.envName}.json`,
+            collection: collectionFilePath,
+            folder: folderName,
+            iterationData: `postman/collection/${folderName}-data.json`,
+            reporters: 'json',
+            reporter: {json: {export: `postman/report/${folderName}-report.json`}}
+        }, function (err) {
+            console.log(`collection's folder ${folderName} run ${err ? 'failure' : 'complete!'}`);
+            callback(err, folderName);
+        });
+    }
+});
+
+var parallel = require('run-parallel');
+parallel(runnerArray, function(err, results) {
+    if (err) {
+        console.error('collection run failure!');
+        throw err;
+    }
 });

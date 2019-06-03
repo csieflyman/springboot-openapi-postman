@@ -13,8 +13,10 @@
     "newman": "^4.5.0",
     "newman-reporter-html": "^1.0.3",
     "openapi-to-postmanv2": "0.0.12",
+    "parallel": "^1.2.0",
     "postman-collection": "^3.4.8",
     "querystring": "^0.2.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "run-parallel": "^1.1.9"
   }
 }
