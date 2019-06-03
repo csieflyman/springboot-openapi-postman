@@ -37,8 +37,8 @@ if(folderNameArg) {
         collection: collectionFilePath,
         folder: folderNameArg,
         iterationData: `postman/data/${folderNameArg}-data.json`,
-        reporters: 'json',
-        reporter: {json: {export: `postman/report/${folderNameArg}-report.json`}}
+        reporters: ['json', 'html'],
+        reporter: {json: {export: `postman/report/${folderNameArg}-report.json`}, html: {export: `postman/report/${folderNameArg}-report.html`}}
     }, function (err) {
         if(err) {
             console.error(`[ERROR] run folder ${folderNameArg} failure`);
@@ -57,8 +57,8 @@ else {
                 collection: collectionFilePath,
                 folder: folderName,
                 iterationData: `postman/data/${folderName}-data.json`,
-                reporters: 'json',
-                reporter: {json: {export: `postman/report/${folderName}-report.json`}}
+                reporters: ['json', 'html'],
+                reporter: {json: {export: `postman/report/${folderName}-report.json`}, html: {export: `postman/report/${folderName}-report.html`}}
             }, function (err) {
                 if(err) {
                     console.error(`[ERROR] run folder ${folderName} failure`);
