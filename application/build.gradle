@@ -118,7 +118,7 @@ node {
 }
 
 task myNpmInstall(type: NpmTask) {
-    args = ['install', 'openapi-to-postmanv2', 'request', 'run-parallel', 'newman', 'newman-reporter-html', 'postman-collection', '--save-dev']
+    args = ['install', 'request', 'async', 'openapi-to-postmanv2', 'newman', 'newman-reporter-html', '--save-dev']
 }
 
 task swaggerToPostmanCollection(type: NodeTask) {

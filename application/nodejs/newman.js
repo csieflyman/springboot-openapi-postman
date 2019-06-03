@@ -1,5 +1,6 @@
 const fs = require('fs')
 const newman = require('newman');
+const async = require('async');
 
 const envName = process.argv[2];
 if(!envName) {
@@ -30,6 +31,13 @@ console.log(`collection file: ${collectionFilePath}`);
 console.log(`folder: ${folderNameArg ? folderNameArg : ''}`);
 
 if(folderNameArg) {
+    runSpecifiedFolder();
+}
+else {
+    runAllFoldersAndSuitesInSequence();
+}
+
+function runSpecifiedFolder() {
     console.log(`start to run folder ${folderNameArg}...`);
     newman.run({
         globals: 'postman/globals.json',
@@ -38,7 +46,7 @@ if(folderNameArg) {
         folder: folderNameArg,
         iterationData: `postman/folder/${folderNameArg}-data.json`,
         reporters: ['json', 'html'],
-        reporter: {json: {export: `postman/report/${folderNameArg}-report.json`}, html: {export: `postman/report/${folderNameArg}-report.html`}}
+        reporter: {json: {export: `postman/report/folder/${folderNameArg}-report.json`}, html: {export: `postman/report/folder/${folderNameArg}-report.html`}}
     }, function (err) {
         if(err) {
             console.error(`[ERROR] run folder ${folderNameArg} failure`);
@@ -47,10 +55,45 @@ if(folderNameArg) {
     });
     console.log(`finish running folder ${folderNameArg}`);
 }
-else {
-    const runnerArray = folderNameArray.map(folderName => {
-        return function(callback) {
-            console.log(`start to run folder ${folderName}...`);
+
+function runAllFoldersAndSuitesInSequence() {
+    async.series([runAllFoldersInParallel, runAllSuitesInParallel], function (err, results) {
+        if(err) {
+            throw err;
+        }
+    });
+}
+
+function runAllFoldersInParallel(next) {
+    console.log('==================== Run Folders Begin ====================');
+    const runners = getAllFoldersRunners();
+    async.parallel(runners, function(err, results) {
+        if (err) {
+            console.error('run folders failure!');
+            throw err;
+        }
+        console.log('==================== Run Folders End ====================');
+        next(err);
+    });
+}
+
+function runAllSuitesInParallel(next) {
+    console.log('==================== Run Suites Begin ====================');
+    const runners = getAllSuitesRunners();
+    async.parallel(runners, function(err, results) {
+        if (err) {
+            console.error('run suites failure!');
+            throw err;
+        }
+        console.log('==================== Run Suites End ====================');
+        next(err);
+    });
+}
+
+function getAllFoldersRunners() {
+    return folderNameArray.map(folderName => {
+        return function(finish) {
+            console.log(`========== Folder ${folderName} Begin ==========`);
             newman.run({
                 globals: 'postman/globals.json',
                 environment: envFilePath,
@@ -58,24 +101,37 @@ else {
                 folder: folderName,
                 iterationData: `postman/folder/${folderName}-data.json`,
                 reporters: ['json', 'html'],
-                reporter: {json: {export: `postman/report/${folderName}-report.json`}, html: {export: `postman/report/${folderName}-report.html`}}
+                reporter: {json: {export: `postman/report/folder/${folderName}-report.json`}, html: {export: `postman/report/folder/${folderName}-report.html`}}
             }, function (err) {
                 if(err) {
                     console.error(`[ERROR] run folder ${folderName} failure`);
                 }
-                callback(err, folderName);
+                finish(err, folderName);
             });
-            console.log(`finish running folder ${folderName}`);
+            console.log(`========== Folder ${folderName} End ==========`);
         }
     });
+}
 
-    var parallel = require('run-parallel');
-    console.log('start to run collection in parallel');
-    parallel(runnerArray, function(err, results) {
-        if (err) {
-            console.error('run collection failure!');
-            throw err;
+function getAllSuitesRunners() {
+    return fs.readdirSync('postman/suite').map(fileName => {
+        let suiteName = fileName.replace('-data.json', '');
+        return function(finish) {
+            console.log(`========== Suite ${suiteName} Begin ==========`);
+            newman.run({
+                globals: 'postman/globals.json',
+                environment: envFilePath,
+                collection: collectionFilePath,
+                iterationData: `postman/suite/${fileName}`,
+                reporters: ['json', 'html'],
+                reporter: {json: {export: `postman/report/suite/${suiteName}-report.json`}, html: {export: `postman/report/suite/${suiteName}-report.html`}}
+            }, function (err) {
+                if(err) {
+                    console.error(`[ERROR] run suite ${suiteName} failure`);
+                }
+                finish(err, suiteName);
+            });
+            console.log(`========== Suite ${suiteName} End ==========`);
         }
-        console.log('finish running collection in parallel');
     });
 }

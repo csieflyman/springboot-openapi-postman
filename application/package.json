@@ -9,6 +9,7 @@
   "author": "James",
   "license": "ISC",
   "devDependencies": {
+    "async": "^3.0.1",
     "http": "0.0.0",
     "newman": "^4.5.0",
     "newman-reporter-html": "^1.0.3",
