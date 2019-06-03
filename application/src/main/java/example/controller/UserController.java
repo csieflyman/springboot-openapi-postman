@@ -33,7 +33,7 @@ public class UserController extends AbstractController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Long createUser(@Validated({CreateFormGroups.class}) @RequestBody User user, BindingResult result) {
-        log.error("================= Create User =========================");
+        log.info("================= Create User =========================");
         processBindingResult(result);
         userService.create(user);
         return user.getId();
@@ -41,7 +41,7 @@ public class UserController extends AbstractController {
 
     @PutMapping(value = {"/{userId}"}, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updateUser(@PathVariable String userId, @Validated({UpdateFormGroups.class}) @RequestBody User user, BindingResult result) {
-        log.error("================= Update User =========================");
+        log.info("================= Update User =========================");
         processBindingResult(result);
         user.setId(Long.valueOf(userId));
         userService.update(user);
@@ -49,21 +49,21 @@ public class UserController extends AbstractController {
 
     @DeleteMapping({"/{userId}"})
     public void deleteUser(@PathVariable String userId) {
-        log.error("================= Delete User =========================");
+        log.info("================= Delete User =========================");
         userService.deleteById(Long.valueOf(userId));
     }
 
     @ApiResponses(value = { @ApiResponse(code = 200, message = "User Model", response = User.class), @ApiResponse(code = 404, message = "User not found") })
     @GetMapping(value = {"/{userId}"}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Object getUser(@PathVariable String userId) {
-        log.error("================= Get User =========================");
+        log.info("================= Get User =========================");
         Optional<User> result = userService.findById(Long.valueOf(userId));
         return result.isPresent() ? result.get() : ResponseEntity.notFound().build();
     }
 
     @GetMapping
     public ResponseEntity findUsers(@RequestParam() MultiValueMap<String, String> requestParam) {
-        log.error("================= Find User =========================");
+        log.info("================= Find User =========================");
         return findEntities(userService, Query.create(requestParam));
     }
 }

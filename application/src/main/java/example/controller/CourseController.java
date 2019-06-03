@@ -33,7 +33,7 @@ public class CourseController extends AbstractController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Long createCourse(@Validated({CreateFormGroups.class}) @RequestBody Course course, BindingResult result) {
-        log.error("================= Create Course =========================");
+        log.info("================= Create Course =========================");
         processBindingResult(result);
         courseService.create(course);
         return course.getId();
@@ -41,7 +41,7 @@ public class CourseController extends AbstractController {
 
     @PutMapping(value = {"/{courseId}"}, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updateCourse(@PathVariable String courseId, @Validated({UpdateFormGroups.class}) @RequestBody Course course, BindingResult result) {
-        log.error("================= Update Course =========================");
+        log.info("================= Update Course =========================");
         processBindingResult(result);
         course.setId(Long.valueOf(courseId));
         courseService.update(course);
@@ -49,21 +49,21 @@ public class CourseController extends AbstractController {
 
     @DeleteMapping({"/{courseId}"})
     public void deleteCourse(@PathVariable String courseId) {
-        log.error("================= Delete Course =========================");
+        log.info("================= Delete Course =========================");
         courseService.deleteById(Long.valueOf(courseId));
     }
 
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Course Model", response = Course.class), @ApiResponse(code = 404, message = "Course not found") })
     @GetMapping(value = {"/{courseId}"}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Object getCourse(@PathVariable String courseId) {
-        log.error("================= Get Course =========================");
+        log.info("================= Get Course =========================");
         Optional<Course> result = courseService.findById(Long.valueOf(courseId));
         return result.isPresent() ? result.get() : ResponseEntity.notFound().build();
     }
 
     @GetMapping
     public ResponseEntity findCourses(@RequestParam() MultiValueMap<String, String> requestParam) {
-        log.error("================= Find Course =========================");
+        log.info("================= Find Course =========================");
         return findEntities(courseService, Query.create(requestParam));
     }
 }
