@@ -8,3 +8,11 @@ CREATE TABLE `user` (
 `update_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`)
 );
+
+CREATE TABLE `course` (
+`id` int unsigned NOT NULL AUTO_INCREMENT,
+`name` varchar(20) NOT NULL,
+`create_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+`update_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+PRIMARY KEY (`id`)
+);

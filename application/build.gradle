@@ -75,9 +75,9 @@ swagger {
         host = 'localhost:8080'
         basePath = '/'
         info {
-            title = 'User API'
+            title = 'Example API'
             version = '1.0'
-            description = 'This is User API'
+            description = 'This is Example API'
         }
         outputFormats = ["yaml"]
     }
