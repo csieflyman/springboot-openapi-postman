@@ -1,8 +1,7 @@
 package example.controller;
 
 import base.controller.AbstractController;
-import base.dto.CreateFormGroups;
-import base.dto.UpdateFormGroups;
+import base.dto.FormGroups;
 import base.util.query.Query;
 import example.model.User;
 import example.service.UserService;
@@ -32,7 +31,7 @@ public class UserController extends AbstractController {
     private UserService userService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Long createUser(@Validated({CreateFormGroups.class}) @RequestBody User user, BindingResult result) {
+    public Long createUser(@Validated({FormGroups.CREATE.class}) @RequestBody User user, BindingResult result) {
         log.info("================= Create User =========================");
         processBindingResult(result);
         userService.create(user);
@@ -40,7 +39,7 @@ public class UserController extends AbstractController {
     }
 
     @PutMapping(value = {"/{userId}"}, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void updateUser(@PathVariable String userId, @Validated({UpdateFormGroups.class}) @RequestBody User user, BindingResult result) {
+    public void updateUser(@PathVariable String userId, @Validated({FormGroups.UPDATE.class}) @RequestBody User user, BindingResult result) {
         log.info("================= Update User =========================");
         processBindingResult(result);
         user.setId(Long.valueOf(userId));

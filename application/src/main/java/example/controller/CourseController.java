@@ -1,8 +1,7 @@
 package example.controller;
 
 import base.controller.AbstractController;
-import base.dto.CreateFormGroups;
-import base.dto.UpdateFormGroups;
+import base.dto.FormGroups;
 import base.util.query.Query;
 import example.model.Course;
 import example.service.CourseService;
@@ -32,7 +31,7 @@ public class CourseController extends AbstractController {
     private CourseService courseService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Long createCourse(@Validated({CreateFormGroups.class}) @RequestBody Course course, BindingResult result) {
+    public Long createCourse(@Validated({FormGroups.CREATE.class}) @RequestBody Course course, BindingResult result) {
         log.info("================= Create Course =========================");
         processBindingResult(result);
         courseService.create(course);
@@ -40,7 +39,7 @@ public class CourseController extends AbstractController {
     }
 
     @PutMapping(value = {"/{courseId}"}, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void updateCourse(@PathVariable String courseId, @Validated({UpdateFormGroups.class}) @RequestBody Course course, BindingResult result) {
+    public void updateCourse(@PathVariable String courseId, @Validated({FormGroups.UPDATE.class}) @RequestBody Course course, BindingResult result) {
         log.info("================= Update Course =========================");
         processBindingResult(result);
         course.setId(Long.valueOf(courseId));
