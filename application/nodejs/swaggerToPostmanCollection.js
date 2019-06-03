@@ -56,7 +56,7 @@ function manipulateCollection(collection) {
     addEvent(collection);
     addMockRequestAtFirstPosition(collection);
     console.log("manipulateCollection success");
-    fs.writeFileSync('postman/collection/collection.json', JSON.stringify(collection));
+    fs.writeFileSync('postman/collection.json', JSON.stringify(collection));
 }
 
 function moveAllRequestsToRootFolder(collection) {

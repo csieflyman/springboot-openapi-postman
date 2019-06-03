@@ -12,19 +12,18 @@ module.exports = {
 //    updateEnvironment: updateEnvironment
 };
 
-const util = require('./util.js').init();
 const request = require('request');
 const postmanApiUrl = 'https://api.getpostman.com'
 const baseRequest = request.defaults({
   headers: {'X-Api-Key': process.env["X-Api-Key"]}
 })
-
-console.log(util.collection);
+const fs = require('fs');
 
 if(process.env["uploadCollection"] === 'true')
-    uploadCollection(util.collection);
-if(process.env["uploadEnv"] === 'true')
-    uploadEnvironment(util.env);
+    uploadCollection(JSON.parse(fs.readFileSync('postman/collection.json', {encoding: 'utf8'})));
+if(process.env["uploadEnv"] === 'true') {
+    fs.readdirSync('postman/env').forEach(fileName => uploadEnvironment(JSON.parse(fs.readFileSync(`postman/env/${fileName}`, {encoding: 'utf8'}))));
+}
 
 function getCollection(collectionUid) {
     return sendGetRequest('collections', collectionUid);

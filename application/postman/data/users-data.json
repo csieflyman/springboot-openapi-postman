@@ -1,0 +1,28 @@
+[
+  {
+    "_requestName": "create User",
+    "_requestBody": "{\"name\": \"csieflyman\",\"gender\": \"MALE\",\"age\": 30,\"isMember\": false}",
+    "_test": "pm.test('200 ok', function(){pm.response.to.have.status(200);}); pm.test('check userId after create', function(){Number.isInteger(responseBody);}); postman.setEnvironmentVariable(\"userId\", responseBody);"
+  },
+  {
+    "_requestName": "get User",
+    "_test": "pm.test('200 ok', function(){pm.response.to.have.status(200);}); pm.test('check username', function(){pm.expect(pm.response.json().name).to.eql('csieflyman');});"
+  },
+  {
+    "_requestName": "update User",
+    "_requestBody": "{\"name\": \"csieflyman\",\"gender\": \"MALE\",\"age\": 30,\"isMember\": true}",
+    "_test": "pm.test('200 ok', function(){pm.response.to.have.status(200);});"
+  },
+  {
+    "_requestName": "get User",
+    "_test": "pm.test('200 ok', function(){pm.response.to.have.status(200);}); pm.test('check data after update', function(){pm.expect(pm.response.json().name).to.eql('csieflyman');pm.expect(pm.response.json().isMember).to.eql(true);});"
+  },
+  {
+    "_requestName": "find Users",
+    "_test": ""
+  },
+  {
+    "_requestName": "delete User",
+    "_test": ""
+  }
+]

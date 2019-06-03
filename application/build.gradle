@@ -131,10 +131,10 @@ task generatePostmanCollection(type: GradleBuild) {
 
 task newman(type: NodeTask) {
     script = file('nodejs/newman.js')
-    args = ['localhost', 'collection'] // envName, collectionName, folderName
+    args = ['localhost'] // envName(required), folderName(optional)
 }
 
 task uploadToPostmanServer(type: NodeTask) {
-    environment "X-Api-Key": System.getenv("POSTMAN_API_KEY"), "uploadEnv": "false", "uploadCollection": "true"
+    environment "X-Api-Key": System.getenv("POSTMAN_API_KEY"), "uploadEnv": "true", "uploadCollection": "true"
     script = file('nodejs/postmanApi.js')
 }

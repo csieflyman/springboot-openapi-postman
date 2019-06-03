@@ -1,41 +1,81 @@
 const fs = require('fs')
 const newman = require('newman');
-const util = require('./util.js').init();
 
-const collectionFilePath = 'postman/collection/collection.json';
+const envName = process.argv[2];
+if(!envName) {
+    throw '[ERROR] env name is required';
+}
+const envFilePath = `postman/env/${envName}-env.json`;
+if(!fs.existsSync(envFilePath)) {
+    throw `[ERROR] ${envFilePath} is not exist.`;
+}
+
+const collectionFilePath = 'postman/collection.json';
 if(!fs.existsSync(collectionFilePath)) {
-    console.log('not exists collection.json file. exit...')
-    return;
+    throw `[ERROR] ${collectionFilePath} is not exist.`;
 }
-
 collection = JSON.parse(fs.readFileSync(collectionFilePath, {encoding: 'utf8'}));
-const folderNameArray = collection.item.map(folder => folder.name);
+const folderNameArray = collection.item.filter(item => item.item).map(folder => folder.name);
 if(folderNameArray.length == 0) {
-    console.log('not exists folders. exit...')
-    return;
+    throw `[ERROR] ${collectionFilePath} does not contains any folder`;
 }
 
-const runnerArray = folderNameArray.map(folderName => {
-    return function(callback) {
-        newman.run({
-            globals: 'postman/globals.json',
-            environment: `postman/env/${util.envName}.json`,
-            collection: collectionFilePath,
-            folder: folderName,
-            iterationData: `postman/collection/${folderName}-data.json`,
-            reporters: 'json',
-            reporter: {json: {export: `postman/report/${folderName}-report.json`}}
-        }, function (err) {
-            console.log(`collection's folder ${folderName} run ${err ? 'failure' : 'complete!'}`);
-            callback(err, folderName);
-        });
-    }
-});
+const folderNameArg = process.argv[3];
+if(folderNameArg && !folderNameArray.includes(folderNameArg)) {
+    throw `[ERROR] folder ${folderNameArg} is not exist`;
+}
 
-var parallel = require('run-parallel');
-parallel(runnerArray, function(err, results) {
-    if (err) {
-        console.error('collection run failure!');
-        throw err;
-    }
-});
+console.log(`env file: ${envFilePath}`);
+console.log(`collection file: ${collectionFilePath}`);
+console.log(`folder: ${folderNameArg ? folderNameArg : ''}`);
+
+if(folderNameArg) {
+    console.log(`start to run folder ${folderNameArg}...`);
+    newman.run({
+        globals: 'postman/globals.json',
+        environment: envFilePath,
+        collection: collectionFilePath,
+        folder: folderNameArg,
+        iterationData: `postman/data/${folderNameArg}-data.json`,
+        reporters: 'json',
+        reporter: {json: {export: `postman/report/${folderNameArg}-report.json`}}
+    }, function (err) {
+        if(err) {
+            console.error(`[ERROR] run folder ${folderNameArg} failure`);
+            throw err;
+        }
+    });
+    console.log(`finish running folder ${folderNameArg}`);
+}
+else {
+    const runnerArray = folderNameArray.map(folderName => {
+        return function(callback) {
+            console.log(`start to run folder ${folderName}...`);
+            newman.run({
+                globals: 'postman/globals.json',
+                environment: envFilePath,
+                collection: collectionFilePath,
+                folder: folderName,
+                iterationData: `postman/data/${folderName}-data.json`,
+                reporters: 'json',
+                reporter: {json: {export: `postman/report/${folderName}-report.json`}}
+            }, function (err) {
+                if(err) {
+                    console.error(`[ERROR] run folder ${folderName} failure`);
+                }
+                callback(err, folderName);
+            });
+            console.log(`finish running folder ${folderName}`);
+        }
+    });
+
+    var parallel = require('run-parallel');
+    console.log('start to run collection in parallel');
+    parallel(runnerArray, function(err, results) {
+        if (err) {
+            console.error('run collection failure!');
+            throw err;
+        }
+        console.log('finish running collection in parallel');
+    });
+}
