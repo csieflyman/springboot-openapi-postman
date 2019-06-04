@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.groups.Default;
 import java.util.Optional;
 
 /**
@@ -31,7 +32,7 @@ public class CourseController extends AbstractController {
     private CourseService courseService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Long createCourse(@Validated({FormGroups.CREATE.class}) @RequestBody Course course, BindingResult result) {
+    public Long createCourse(@Validated({Default.class, FormGroups.CREATE.class, FormGroups.CREATE_ORDERS.class}) @RequestBody Course course, BindingResult result) {
         log.info("================= Create Course =========================");
         processBindingResult(result);
         courseService.create(course);
@@ -39,7 +40,7 @@ public class CourseController extends AbstractController {
     }
 
     @PutMapping(value = {"/{courseId}"}, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void updateCourse(@PathVariable String courseId, @Validated({FormGroups.UPDATE.class}) @RequestBody Course course, BindingResult result) {
+    public void updateCourse(@PathVariable String courseId, @Validated({Default.class, FormGroups.UPDATE.class, FormGroups.UPDATE_ORDERS.class}) @RequestBody Course course, BindingResult result) {
         log.info("================= Update Course =========================");
         processBindingResult(result);
         course.setId(Long.valueOf(courseId));

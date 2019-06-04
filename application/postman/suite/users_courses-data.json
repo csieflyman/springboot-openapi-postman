@@ -9,23 +9,6 @@
     "_test": "pm.test('200 ok', function(){pm.response.to.have.status(200);}); pm.test('check username', function(){pm.expect(pm.response.json().name).to.eql('csieflyman');});"
   },
   {
-    "_requestName": "update User",
-    "_requestBody": "{\"name\": \"csieflyman\",\"gender\": \"MALE\",\"age\": 30,\"isMember\": true}",
-    "_test": "pm.test('200 ok', function(){pm.response.to.have.status(200);});"
-  },
-  {
-    "_requestName": "get User",
-    "_test": "pm.test('200 ok', function(){pm.response.to.have.status(200);}); pm.test('check data after update', function(){pm.expect(pm.response.json().name).to.eql('csieflyman');pm.expect(pm.response.json().isMember).to.eql(true);});"
-  },
-  {
-    "_requestName": "find Users",
-    "_test": ""
-  },
-  {
-    "_requestName": "delete User",
-    "_test": ""
-  },
-  {
     "_requestName": "create Course",
     "_requestBody": "{\"name\": \"Design Pattern\"}",
     "_test": "pm.test('200 ok', function(){pm.response.to.have.status(200);}); pm.test('check courseId after create', function(){Number.isInteger(responseBody);}); postman.setEnvironmentVariable(\"courseId\", responseBody);"
@@ -33,22 +16,5 @@
   {
     "_requestName": "get Course",
     "_test": "pm.test('200 ok', function(){pm.response.to.have.status(200);}); pm.test('check course name', function(){pm.expect(pm.response.json().name).to.eql('Design Pattern');});"
-  },
-  {
-    "_requestName": "update Course",
-    "_requestBody": "{\"name\": \"Spring Boot\"}",
-    "_test": "pm.test('200 ok', function(){pm.response.to.have.status(200);});"
-  },
-  {
-    "_requestName": "get Course",
-    "_test": "pm.test('200 ok', function(){pm.response.to.have.status(200);}); pm.test('check data after update', function(){pm.expect(pm.response.json().name).to.eql('Spring Boot');});"
-  },
-  {
-    "_requestName": "find Courses",
-    "_test": ""
-  },
-  {
-    "_requestName": "delete Course",
-    "_test": ""
   }
 ]
