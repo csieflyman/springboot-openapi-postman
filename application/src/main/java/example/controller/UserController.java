@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.groups.Default;
 import java.util.Optional;
 
 /**
@@ -31,7 +32,7 @@ public class UserController extends AbstractController {
     private UserService userService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Long createUser(@Validated({FormGroups.CREATE.class}) @RequestBody User user, BindingResult result) {
+    public Long createUser(@Validated({Default.class, FormGroups.CREATE.class, FormGroups.CREATE_ORDERS.class}) @RequestBody User user, BindingResult result) {
         log.info("================= Create User =========================");
         processBindingResult(result);
         userService.create(user);
@@ -39,7 +40,7 @@ public class UserController extends AbstractController {
     }
 
     @PutMapping(value = {"/{userId}"}, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void updateUser(@PathVariable String userId, @Validated({FormGroups.UPDATE.class}) @RequestBody User user, BindingResult result) {
+    public void updateUser(@PathVariable String userId, @Validated({Default.class, FormGroups.UPDATE.class, FormGroups.UPDATE_ORDERS.class}) @RequestBody User user, BindingResult result) {
         log.info("================= Update User =========================");
         processBindingResult(result);
         user.setId(Long.valueOf(userId));

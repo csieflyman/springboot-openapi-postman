@@ -5,14 +5,18 @@ import base.exception.BadRequestException;
 import base.model.BaseModel;
 import base.service.GenericService;
 import base.util.Json;
+import base.util.http.BodyCachingHttpServletRequestWrapper;
 import base.util.query.Query;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,15 +25,23 @@ import java.util.stream.Collectors;
  * @author csieflyman
  */
 @Slf4j
-public class AbstractController {
+@RestController
+public abstract class AbstractController {
 
     @Autowired
     protected HttpServletRequest request;
 
     protected void processBindingResult(BindingResult result) {
         if (result.hasErrors()) {
-            throw new BadRequestException("invalid data.", null, result.getFieldErrors().stream()
-                    .map(error -> error.getField() + " : " + error.getDefaultMessage()).collect(Collectors.joining(";")));
+            String body = null;
+            try {
+                BodyCachingHttpServletRequestWrapper requestWrapper = new BodyCachingHttpServletRequestWrapper(request);
+                body = new String(requestWrapper.getBody(), Charset.forName("UTF-8"));
+            } catch (IOException e ) {
+                log.warn("fail to get request body: " + request.getMethod() + " " + request.getRequestURI());
+            }
+            throw new BadRequestException(result.getFieldErrors().stream()
+                    .map(error -> error.getField() + " : " + error.getDefaultMessage()).collect(Collectors.joining(";")), body);
         }
     }
 

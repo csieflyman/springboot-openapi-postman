@@ -1,5 +1,3 @@
-package config;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -10,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author csieflyman
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"example"})
+@ComponentScan(basePackages = {"config", "example"})
 @EntityScan(basePackages = {"example.model"})
 public class Application implements WebMvcConfigurer {
 

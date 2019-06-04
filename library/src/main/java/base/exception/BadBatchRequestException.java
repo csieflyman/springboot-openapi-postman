@@ -19,7 +19,7 @@ public class BadBatchRequestException extends BadRequestException {
 
     public BadBatchRequestException(String type, Map<Identifiable, Set<ConstraintViolation<Identifiable>>> invalidObjectsMap) {
         super(invalidObjectsMap.keySet().stream().map(entity -> getErrorMsg(type, entity, invalidObjectsMap.get(entity)))
-                .collect(Collectors.joining(",")), null, invalidObjectsMap.keySet());
+                .collect(Collectors.joining(",")), null);
         this.invalidObjectsMap = invalidObjectsMap;
         this.type = type;
     }

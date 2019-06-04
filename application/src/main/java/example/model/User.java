@@ -32,7 +32,7 @@ public class User extends EntityModel<Long> {
     @Column
     private Gender gender;
 
-    @Min(value = 0, groups = FormGroups.CREATE.class)
+    @Min(value = 0)
     @NotNull(groups = FormGroups.CREATE.class)
     @Column
     private Integer age;

@@ -1,7 +1,6 @@
 package base.dto;
 
-import base.dto.BaseResponseCode;
-import base.dto.ResponseCode;
+import base.exception.BaseException;
 import base.exception.InternalServerErrorException;
 import base.util.Json;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -37,8 +36,8 @@ public class Response<T> {
         this(BaseResponseCode.SUCCESS, BaseResponseCode.SUCCESS.getMessage(), result);
     }
 
-    public Response(ResponseCode responseCode) {
-        this(responseCode, (T) null);
+    public Response(BaseException e) {
+        this(e.getResponseCode(), e.getMessage(), (T)e.getResult());
     }
 
     public Response(ResponseCode responseCode, T result) {
