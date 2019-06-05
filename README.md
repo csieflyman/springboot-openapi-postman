@@ -4,8 +4,8 @@
 * Run newman for each folder of the collection in parallel to reduce execution time. 
 * You can control more fine-grained testing behaviors by passing postman test data files to change postman's default behaviors
 	* You can specify which one request you want to execute, rather than all requests of the collection _(Postman execute all requests of a collection in declared order for each test data. It's inappropriate in most situations)_
-	* You can run test with varying request body and script assertion for each test data _(Postman run the same script assertion which be defined in the request for all test data. It's inappropriate in most situations)_
-	* You can compose many test data to a test suite for a complicated scenario without duplicating the request. For example, in _create -> get -> update -> get_ scenario, you have to create two _get_ requests in a collection in postman application, but actually all you need to do is just define two "get" test data in the test data file
+	* You can run test with varying request body and script assertion for each test data _(Postman run the same script assertion which be written in the request for all test data. It's inappropriate in most situations)_
+	* You can compose many test data to a test suite for a complicated scenario without duplicating the request. For example, in the _create -> get -> update -> get_ scenario, you have to create two _get_ requests in a collection in postman application, but actually all you need to do is just add two "get" test data in the test data file
 * Developers can upload tested collection to postman server, then sync it with other team members.
 * Testers neither use this tool nor modify collection, they just sync collection with postman application and run test with test data files
 
@@ -85,10 +85,10 @@
 ```
 
 ## Mock request
-* For specify the request you want to execute rather than all requests of the collection, this tool manipulate the generated collection json with the following changes
+* For specify the request you want to execute rather than all requests of the collection, this tool manipulate the generated collection json with the following modifications
 	* Create a mock request in each folder automatically and put it to the first position.
-	* add  `postman.setNextRequest(pm.iterationData.get("\_requestName"));` in the _Pre-request Script_ of the mock request, then postman will jump to your specified request and execute it.
-	* add `postman.setNextRequest(null);` in the _Test Script_ of each request, then postman will stop this test iteration after executing request
+	* Add  `postman.setNextRequest(pm.iterationData.get("\_requestName"));` in the _Pre-request Script_ of the mock request, then postman will jump to your specified request and execute it.
+	* Add `postman.setNextRequest(null);` in the _Test Script_ of each request, then postman will stop current test iteration after executing request
 	* You can send a GET mock request and return 200 OK simply, then ignore the test result.
 
 ## This project use the following APIs and tools...
