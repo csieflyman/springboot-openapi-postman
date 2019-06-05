@@ -1,6 +1,4 @@
 # spring-postman
-Convert Spring Boot Controllers to a Postman Collection for REST API Automated Testing
-## This tool can help you...
 * Convert spring boot controllers to a postman collection automatically to reduce effort in writing API test and ensure test cases are up-to-date.
 * Integrate gradle with Node.js script provider a convenient way to run test for developers
 * Run newman for each folder of the collection in parallel to reduce execution time. 
@@ -39,7 +37,7 @@ Convert Spring Boot Controllers to a Postman Collection for REST API Automated T
 * You have to specify three pre-defined variables value for each test data
 	* _\_requestName(required)_: The request which you what to execute.
 	* _\_requestBody(optional)_: The request body of request if need (POST, PUT...etc)
-	* _\_test(required, but can be empty string)_: The javascript code executed after the request is sent. For example, you can check the response for assertion. I think of code as data and pass it to postman. When postman run test script `pm.iterationData.get("\_test");eval(script);`,  it will get _"\_test"_ value and run our script code.
+	* _\_test(required, but can be empty string)_: The javascript code executed after the request is sent. For example, you can check the response for assertion. __We can think of code as data and pass it to postman__. When postman run test script `pm.iterationData.get("\_test");eval(script);`,  it will get _"\_test"_ value and run our script code.
 * Example
 ```
 [
