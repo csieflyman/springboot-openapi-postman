@@ -37,7 +37,7 @@
 * You have to specify three pre-defined variables value for each test data
 	* _\_requestName(required)_: The request which you what to execute.
 	* _\_requestBody(optional)_: The request body of request if need (POST, PUT...etc)
-	* _\_test(required, but can be empty string)_: The javascript code executed after the request is sent. For example, you can check the response for assertion. __We can think of code as data and pass it to postman__. When postman run test script `pm.iterationData.get("\_test");eval(script);`,  it will get _"\_test"_ value and run our script code.
+	* _\_test(required, but can be empty string)_: The javascript code executed after the request is sent. For example, you can check the response for assertion. __We can think of code as data and pass it to postman__. When postman run test script `pm.iterationData.get("_test");eval(script);`,  it will get _"\_test"_ value and run our script code.
 * Example
 ```
 [
@@ -87,7 +87,7 @@
 ## Mock request
 * For specify the request you want to execute rather than all requests of the collection, this tool manipulate the generated collection json with the following modifications
 	* Create a mock request in each folder automatically and put it to the first position.
-	* Add  `postman.setNextRequest(pm.iterationData.get("\_requestName"));` in the _Pre-request Script_ of the mock request, then postman will jump to your specified request and execute it.
+	* Add  `postman.setNextRequest(pm.iterationData.get("_requestName"));` in the _Pre-request Script_ of the mock request, then postman will jump to your specified request and execute it.
 	* Add `postman.setNextRequest(null);` in the _Test Script_ of each request, then postman will stop current test iteration after executing request
 	* You can send a GET mock request and return 200 OK simply, then ignore the test result.
 
