@@ -74,8 +74,9 @@ function moveAllRequestsToRootFolder(collection) {
 
 function moveRequestToFolder(folder, item) {
     item.forEach(function(obj) {
-        if(obj.item)
-            moveItems(folder, obj.item); //obj is folder
+        if(obj.item) {
+            moveRequestToFolder(folder, obj.item); //obj is folder
+        }
         else {
             folder.item.push(obj); // obj is request
         }
