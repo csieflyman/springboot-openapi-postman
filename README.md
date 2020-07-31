@@ -1,4 +1,4 @@
-# spring-postman
+# spring boot-openapi-postman
 * Convert spring boot controllers to a postman collection automatically to reduce effort in writing API test and ensure test cases are up-to-date.
 * Integrate gradle with Node.js script provider a convenient way to run test for developers
 * Run newman for each folder of the collection in parallel to reduce execution time. 
